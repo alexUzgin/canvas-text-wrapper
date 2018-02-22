@@ -7,7 +7,7 @@
       font: '18px Arial, sans-serif',
       sizeToFill: false,
       maxFontSizeToFill: false,
-      lineHeight: 1,
+      lineHeight: 1.1,
       allowNewLine: true,
       lineBreak: 'auto',
       textAlign: 'left',
@@ -18,7 +18,11 @@
       fitParent: false,
       strokeText: false,
       renderHDPI: true,
-      textDecoration: 'none'
+      textDecoration: 'none',
+      offsetX: 0,
+      offsetY: 0,
+      txtWidth: 0,
+      txtHeight: 0
     };
 
     var opts = {};
@@ -26,7 +30,7 @@
     for (var key in defaults) {
       opts[key] = options.hasOwnProperty(key) ? options[key] : defaults[key];
     }
-
+    console.log('inside canvastext wrapper', opts);
     var context = canvas.getContext('2d');
     context.font = opts.font;
     context.textBaseline = 'bottom';
@@ -65,8 +69,14 @@
 
     var EL_WIDTH = (!opts.fitParent ? canvas.width : canvas.parentNode.clientWidth) / scale;
     var EL_HEIGHT = (!opts.fitParent ? canvas.height : canvas.parentNode.clientHeight) / scale;
-    var MAX_TXT_WIDTH = EL_WIDTH - (opts.paddingX * 2);
-    var MAX_TXT_HEIGHT = EL_HEIGHT - (opts.paddingY * 2);
+    var EL_WIDTH = (opts.txtWidth > 0 ? opts.txtWidth : EL_WIDTH);
+    var EL_HEIGHT = (opts.txtWidth > 0 ? opts.txtHeight : EL_HEIGHT);
+    var MAX_TXT_WIDTH = (opts.txtWidth > 0 ? opts.txtWidth : EL_WIDTH - (opts.paddingX * 2));
+    var MAX_TXT_HEIGHT = (opts.txtHeight > 0 ? opts.txtHeight : EL_HEIGHT - (opts.paddingY * 2));
+    var OFFSET_X = (opts.offsetX > 0 ? opts.offsetX : 0);
+    var OFFSET_Y = (opts.offsetY > 0 ? opts.offsetY : 0);
+    
+
 
     var fontSize = opts.font.match(/\d+(px|em|%)/g) ? +opts.font.match(/\d+(px|em|%)/g)[0].match(/\d+/g) : 18;
     var textBlockHeight = 0;
@@ -269,7 +279,7 @@
       for (var i = 0; i < lines.length; i++) {
         textPos.y = parseInt(textPos.y) + lineHeight;
         if (lines[i] !== skipLineOnMatch) {
-          context.fillText(lines[i], textPos.x, textPos.y);
+          context.fillText(lines[i], textPos.x+OFFSET_X, textPos.y+OFFSET_Y);
         
           if (opts.strokeText) {
             context.strokeText(lines[i], textPos.x, textPos.y);
