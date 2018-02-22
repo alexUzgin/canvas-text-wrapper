@@ -62,6 +62,10 @@ export interface CanvasTextWrapperOptions {
    /**
     * Text is underlined according to context.strokeStyle and context.lineWidth
     */
-   textDecoration?: "none" | "underline"
+   textDecoration?: "none" | "underline",
+   offsetX?: number,
+   offsetY?: number,
+   txtWidth?: number,
+   txtHeight?: number
 }
 
